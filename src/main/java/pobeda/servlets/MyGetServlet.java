@@ -2,11 +2,8 @@ package pobeda.servlets;
 
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import pobeda.Car;
-
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,7 +18,6 @@ public class MyGetServlet extends HttpServlet {
 
     private final Gson gson = new Gson();
     private final static String filePath = "cars.json";
-    File file = new File(filePath);
 
 
     @Override
@@ -33,6 +29,7 @@ public class MyGetServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
+            reader.close();
             out.print(car.toString());
             out.flush();
         } catch (FileNotFoundException ex) {
@@ -75,6 +72,7 @@ public class MyGetServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        File file = new File("E:\\java\\projects\\IBS\\cars.json");
         file.delete();
     }
 }
