@@ -2,32 +2,80 @@ package pobeda.servlets;
 
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import pobeda.Car;
-import pobeda.Main;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
-@WebServlet( urlPatterns = {"/first"})
+
+@WebServlet(urlPatterns = {"/first"})
 public class MyGetServlet extends HttpServlet {
 
     private final Gson gson = new Gson();
+    private final static String filePath = "cars.json";
+    File file = new File(filePath);
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Car car = new Car("Yellow", "Porshe");
-        String carJsonString = this.gson.toJson(car);
 
-        PrintWriter out = resp.getWriter();
+        try {
+            JsonReader reader = new JsonReader(new FileReader(filePath));
+            Car car = gson.fromJson(reader, Car.class);
+            PrintWriter out = resp.getWriter();
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            out.print(car.toString());
+            out.flush();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            PrintWriter out = resp.getWriter();
+            resp.setContentType("text/html");
+            resp.setCharacterEncoding("UTF-8");
+            out.print("file not found");
+            out.flush();
+        }
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        out.print(carJsonString);
-        out.flush();
+        Car car = new Car("Yellow", "Porsche");
+
+        try {
+            Writer writer = new FileWriter(filePath);
+            new Gson().toJson(car, writer);
+            writer.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        Car car = new Car("Red", "BMW");
+
+        try {
+            Writer writer = new FileWriter(filePath);
+            new Gson().toJson(car, writer);
+            writer.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        file.delete();
     }
 }
