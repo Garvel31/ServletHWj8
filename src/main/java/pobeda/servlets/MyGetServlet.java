@@ -36,7 +36,6 @@ public class MyGetServlet extends HttpServlet {
             out.print(car.toString());
             out.flush();
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
             PrintWriter out = resp.getWriter();
             resp.setContentType("text/html");
             resp.setCharacterEncoding("UTF-8");

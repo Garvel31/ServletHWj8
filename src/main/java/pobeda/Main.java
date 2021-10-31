@@ -23,7 +23,7 @@ public class Main {
 
 
         String webPort = System.getenv("PORT");
-        if (webPort == null || webPort.isEmpty()) webPort = "8080";
+        if (webPort == null || webPort.isEmpty()) webPort = "8099";
         Server server = new Server(Integer.valueOf(webPort));
         String webappDir = "src/main/webapp/";
         WebAppContext context = new WebAppContext();
